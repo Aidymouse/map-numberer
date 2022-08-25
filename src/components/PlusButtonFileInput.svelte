@@ -10,7 +10,7 @@
 
     export let files: FileList;
 
-    function fileChanged(e) {
+    function fileChanged(e: Event) {
         dispatch('change', e);
     }
 
@@ -40,6 +40,7 @@
     #plus-container:hover {
         background-color: rgba(255, 255, 255, 0.5);
         transition-duration: 0.2s;
+        cursor: pointer;
     }
 
     p {
