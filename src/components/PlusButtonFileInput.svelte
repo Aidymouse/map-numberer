@@ -30,15 +30,15 @@
 <style>
 
     #plus-container {
-        border: solid 3px orange;
+        border: solid 3px #f2f2f2;
         border-radius: 6px;
         position: relative;
-        color: orange;
+        color: #f2f2f2;
         transition-duration: 0.2s;
     }
 
     #plus-container:hover {
-        background-color: rgba(255, 255, 255, 0.5);
+        background-color: rgba(255, 255, 255, 0.3);
         transition-duration: 0.2s;
         cursor: pointer;
     }
@@ -54,6 +54,7 @@
         place-content: center;
         place-items: center;
         font-size: 30px;
+        font-family: 'Times New Roman', Times, serif;
     }
 
     input {
