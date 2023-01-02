@@ -17,6 +17,7 @@
   }
 
   let map_numbers = [];
+  let map_pointer = 0;
   let floating_number = {
     number: 1,
     x: 0,
@@ -71,7 +72,9 @@
     ctx.strokeStyle = text_stroke
     ctx.fillStyle = text_fill
     
-    map_numbers.forEach(MN => {
+    let working_set = map_numbers.slice(0, map_pointer)
+
+    working_set.forEach(MN => {
       if (text_stroke_thickness > 0) ctx.strokeText(MN.number, MN.x, MN.y)
       ctx.fillText(MN.number, MN.x, MN.y)
     })
@@ -142,8 +145,11 @@
 
       let mPos = getMousePos(e)
   
+      map_numbers = map_numbers.slice(0, map_pointer)
       let latest_number = map_numbers.length == 0 ? 1 : map_numbers[map_numbers.length-1].number + 1
   
+      
+
       map_numbers.push(
         {
           number: latest_number,
@@ -152,7 +158,8 @@
         }
       )
   
-      floating_number.number = floating_number.number + 1
+      floating_number.number = latest_number + 1
+      map_pointer += 1
   
       render_all()
     
@@ -228,10 +235,33 @@
     render_all()
   }
 
+  function keydown(e) {
+    console.log(e)
+    if (e.ctrlKey) {
+
+      switch (e.key) {
+
+        case "z": {
+
+          if (map_pointer > 0) {
+      
+            map_pointer = map_pointer - 1
+            floating_number.number -= 1
+            render_all()
+          } 
+
+          break
+        }
+      }
+
+      
+    } 
+  }
+
 
 </script>
 
-<svelte:window on:resize={window_resize} on:load={window_resize}/>
+<svelte:window on:resize={window_resize} on:load={window_resize} on:keydown={keydown}/>
 
 <main>
 
