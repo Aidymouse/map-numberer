@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { afterUpdate } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
 
   import cog from './assets/cog.png'
+  import arrow from './assets/arrow.png'
   
-  import MapView from './components/MapView.svelte';
   import PlusButtonFileInput from './components/PlusButtonFileInput.svelte';
 
   let raw_canvas: HTMLCanvasElement;
@@ -42,8 +42,12 @@
 
     raw_canvas.width = map_image.width
     raw_canvas.height = map_image.height
+
+    map_numbers = [];
+    floating_number.number = 1;
     
     // This may need to change in the future
+    map_image = map_image
     window_resize()
 
   }
@@ -62,7 +66,6 @@
   // CANVAS //
   function render_all() {
     if (!map_image.src) return;
-
     
     
     const ctx: CanvasRenderingContext2D = raw_canvas.getContext("2d")
@@ -134,16 +137,10 @@
 
   function toggle_aside() {
     let aside = document.getElementById("floating-aside")
-    let toggle_button = document.getElementById("aside-toggle")
-    if (aside.classList.contains("stowed")) {
-      aside.classList.remove("stowed")
-      toggle_button.innerHTML = ">"
-      
-    } else {
-      
-      aside.classList.add("stowed")
-      toggle_button.innerHTML = "<"
-    }
+    let toggle_button_img = document.getElementById("aside-toggle-img")
+    aside.classList.toggle("stowed")
+    toggle_button_img.classList.toggle("right-facing")
+    
   }
   
   function get_highest_number() {
@@ -264,12 +261,7 @@
   }
 
   function keydown(e) {
-    switch (e.key) {
-      case "Shift": {
-        shift_held = true
-        break
-      }
-    }
+    
 
     if (e.ctrlKey) {
 
@@ -291,10 +283,30 @@
             map_pointer += 1
           } 
         }
+
+        case "s": {
+          e.preventDefault()
+
+          export_map()
+        }
       }
 
       
-    } 
+    } else {
+
+      switch (e.key) {
+        case "Shift": {
+          shift_held = true
+          break
+        }
+
+        case "c": {
+          document.getElementById("help").classList.toggle("hidden");
+          document.getElementById("help-key").classList.add("down");
+          break
+        }
+      }
+    }
 
     render_all()
   }
@@ -303,14 +315,25 @@
     switch (e.key) {
       case "Shift": {
         shift_held = false
-        floating_number.number = get_highest_number() + 1
+        if (setting_autoincrement) floating_number.number = get_highest_number() + 1
         render_all()
+        break
+      }
+
+      case "c": {
+        document.getElementById('help-key').classList.remove("down")
+        break
       }
     }
   }
 
   afterUpdate(() => {
     render_all()
+  })
+
+  onMount(() => {
+    let key = document.getElementById("help-key")
+    if (key) key.classList.remove("down")
   })
 
 
@@ -335,21 +358,25 @@
 
       <hr style="color: #bbbbbb">
       <p class="tiny-text" style="margin-top: 0.5em">Map Numberer version 1.0</p>
-      <p class="tiny-text" style="margin-top: 0.25em">By <a href="https://github.com/Aidymouse/map-numberer">Aidymouse</a></p>
-      <p class="tiny-text">Cog icon by <a href="https://www.flaticon.com/free-icons/cog" title="cog icons">Dave Gandy</a></p>
+      <p class="tiny-text">By <a href="https://github.com/Aidymouse/map-numberer">Aidymouse</a></p>
+      
+      <p class="tiny-text" style="margin-top: 0.25em">Cog icon by <a href="https://www.flaticon.com/free-icons/cog" title="cog icons">Dave Gandy</a></p>
+      <p class="tiny-text">Arrow icon by <a href="https://www.flaticon.com/free-icons/play" title="next icons">Roundicons</a></p>
+
       <p class="tiny-text" style="margin-top: 0.25em">See also: <a href="https://www.hexfriend.net">Hexfriend</a>, <a href="https://dagloopy.blogspot.com/">DaGloopy</a></p>
     </span>
   </aside>
 
   <aside id="floating-aside" class="stowed">
-    <button id="aside-toggle" on:click={toggle_aside}> &lt; </button>
+    <button id="aside-toggle" on:click={toggle_aside}> <img id="aside-toggle-img" src={arrow} class="right-facing"> </button>
 
     <div id="controls">
       <p>Text</p>
-      <input type="number" bind:value={text_size} />
-      <input type="range" min=10 max=100 bind:value={text_size} />
-      <input type="color" bind:value={text_fill} />
-
+      <div class="control-arranger">
+        <div class="color-floater"><input type="color" bind:value={text_fill} /></div>
+        <input type="number" bind:value={text_size} />
+        <input type="range" min=10 max=100 bind:value={text_size} />
+      </div>
       <select bind:value={text_font} >
         <option value={"Segoe UI"}>Segoe UI</option>
         <option value={"Arial"}>Arial</option>
@@ -357,13 +384,19 @@
         <option value={"Times New Roman"}>Times New Roman</option>
       </select>
       
-      <p>Outline</p>
-      <input type="number" bind:value={text_stroke_thickness} />
-      <input type="range" min=0 max=20 bind:value={text_stroke_thickness} />
-      <input type="color" bind:value={text_stroke} />
+      <p style="margin-top: 0.5em">Outline</p>
+      <div class="control-arranger">
+        <div class="color-floater"><input type="color" bind:value={text_stroke} /></div>
+        <input type="number" bind:value={text_stroke_thickness} />
+        <input type="range" min=0 max=20 bind:value={text_stroke_thickness} />
+      </div>
 
-
-      <button on:click={export_map}>Export</button>
+      <button class="light-button" style="margin-top: 0.5em; position: relative;" >
+        <input id="controls-file-input" type="file" accept="image/*" bind:files={input_files} on:change={update_files} />
+        Load New Image
+      </button>
+      
+      <button class:light-button={map_image.src} disabled={map_image.src == "" ? true : false} on:click={export_map}>Export</button>
     </div>
 
   </aside>
@@ -385,10 +418,28 @@
       <canvas width="1" height="1" bind:this={raw_canvas} style="display: none;"/>
     
     {:else}
-      <PlusButtonFileInput accept="image/*" bind:files={input_files} on:change={update_files} />
+      <div style="display: flex; flex-direction: column; align-items: center">
+        <PlusButtonFileInput accept="image/*" bind:files={input_files} on:change={update_files} />
+        <span style="display: flex; margin-top: 1em;">
+          <p style="margin: 0;">Toggle controls with </p>
+          <div class="key-wrapper">
+            <span id="help-key" class="key down">C</span>
+          </div>
+        </span>
+      </div>
     {/if}
 
   </section>
+
+  <span id="help" class="hidden">
+    <p class="tiny-text"><span style="color: #f2f2f2">Left Click:</span> Place Number</p>
+    <p class="tiny-text"><span style="color: #f2f2f2">Right Click:</span> Pan</p>
+    <p class="tiny-text"><span style="color: #f2f2f2">Scroll:</span> Zoom</p>
+    <p class="tiny-text"><span style="color: #f2f2f2">Shift+Click:</span> Place without Incrementing</p>
+    <p class="tiny-text"><span style="color: #f2f2f2">Shift+Scroll:</span> Manually adjust number</p>
+    <p class="tiny-text"><span style="color: #f2f2f2">Ctrl+Z:</span> Undo</p>
+    <p class="tiny-text"><span style="color: #f2f2f2">Ctrl+Shift+Z:</span> Redo</p>
+  </span>
 
   
 
@@ -396,6 +447,43 @@
 
 <style>
 
+/* HELP PANEL */
+#help {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 1em;
+  padding: 1em;
+  background-color: #222222;
+  gap: 0.25em;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5em
+}
+
+.key-wrapper {
+  position: relative;
+  width: 30px;
+  margin-left: 0.3em;
+}
+
+span.key {
+  background-color: #f2f2f2;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  color: #333333;
+  border-radius: 3px;
+  border-bottom: solid 0.3em #bbbbbb;
+  position: absolute;
+}
+
+span.down {
+  border-bottom: none;
+  margin-top: 0.3em;
+  display: inline-block;
+}
+
+/* */
 p {
   color: #f2f2f2;
 }
@@ -410,8 +498,8 @@ section {
 #controls {
   background-color: #222222;
   right: 0;
-  border-radius: 3px;
-  padding: 0.5em;
+  border-radius: 0.5em;
+  padding: 1em;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -430,14 +518,14 @@ section {
   height: 100%;
   padding: 1em;
   padding-left: 0em;
-  width: 15em;
+  width: 17em;
   box-sizing: border-box;
 
   transition-duration: 0.2s;
 }
 
 #floating-aside.stowed {
-  margin-right: -15em;
+  margin-right: -17em;
   transition-duration: 0.2s;
 }
 
@@ -448,6 +536,16 @@ section {
   left: -3em;
 }
 
+#aside-toggle img {
+  transition-duration: 0.2s;
+  width: 40%;
+}
+
+#aside-toggle img.right-facing {
+  transition-duration: 0.2s;
+  rotate: 180deg;
+}
+
 button {
   background-color: #222222;
   border: none;
@@ -455,12 +553,94 @@ button {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   font-weight: bold;
+  height: 2em;
+  border-radius: 3px;
 }
 
 button:hover {
   background-color: #555555;
 }
 
+
+.light-button {
+  background-color: #444444;
+}
+
+.light-button:hover {
+  background-color: #777777;
+}
+
+button:disabled, button[disabled] {
+  background-color: #444444;
+  color: #777777;
+}
+
+#controls-file-input {
+  width: 100%; height: 100%; opacity: 0; position: absolute; top: 0; left: 0;
+}
+
+/* INPUTS */
+.control-arranger {
+  display: grid;
+  grid-template-rows: 1.5em 1.5em;
+  grid-template-columns: 3em 1fr;
+  box-sizing: border-box;
+  column-gap: 0.5em;
+}
+
+.control-arranger input {
+  box-sizing: border-box;
+}
+
+.control-arranger input[type="color"] {
+  height: 80%;
+  width: 80%;
+  border-radius: 50%;
+  border: solid 3px #f2f2f2;
+  padding: 0;
+  box-sizing: border-box;
+  margin: 0.2em;
+  
+}
+
+input[type="color"]:hover {
+  border-color: #bbbbbb;
+}
+
+input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-floater {
+  grid-row: 1/3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.control-arranger input {
+  width: 100%;
+}
 
 /* SETTINGS */
 .hidden {

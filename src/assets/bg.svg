@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#555555;stroke-width:3;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#555555;stroke-width:3;stroke-miterlimit:10;stroke-dasharray:12.3571,12.3571;}
+	.st2{fill:#333333;}
+	.st3{fill:#F2F2F2;}
+	.st4{fill:none;stroke:#555555;stroke-width:5;stroke-miterlimit:10;}
+	.st5{fill:none;stroke:#555555;stroke-width:5;stroke-miterlimit:10;stroke-dasharray:10.4651,6.2791;}
+</style>
+<g>
+	<g>
+		<line class="st0" x1="-21.5" y1="0" x2="-21.5" y2="6"/>
+		<line class="st1" x1="-21.5" y1="18.36" x2="-21.5" y2="86.32"/>
+		<polyline class="st0" points="-21.5,92.5 -21.5,98.5 -27.5,98.5 		"/>
+		<line class="st1" x1="-39.86" y1="98.5" x2="-107.82" y2="98.5"/>
+		<line class="st0" x1="-114" y1="98.5" x2="-120" y2="98.5"/>
+	</g>
+</g>
+<g>
+	<g>
+		<g>
+			<path class="st2" d="M47.79,70.76v-30.9c-0.4,0.21-0.84,0.43-1.32,0.66c-1.7,0.8-3.27,1.39-4.66,1.75l-1.36,0.35l-2.25-6.92
+				l1.53-0.41c1.94-0.51,4.02-1.35,6.19-2.48c2.14-1.12,3.85-2.27,5.07-3.4l0.43-0.4h4.07v41.75H47.79z"/>
+			<path class="st3" d="M53.99,30.51v38.75h-4.71V37.15c-0.69,0.58-1.84,1.26-3.46,2.02c-1.62,0.77-3.08,1.32-4.39,1.65l-1.32-4.07
+				c2.06-0.55,4.23-1.41,6.5-2.6c2.27-1.19,4.07-2.4,5.39-3.63H53.99 M56.99,27.51h-3h-1.98h-1.18l-0.86,0.81
+				c-1.12,1.04-2.71,2.11-4.74,3.17c-2.07,1.08-4.05,1.88-5.88,2.36l-3.06,0.81l0.98,3.01l1.32,4.07l0.87,2.68l2.73-0.7
+				c1.25-0.32,2.63-0.81,4.11-1.47v27.01v3h3h4.71h3v-3V30.51V27.51L56.99,27.51z"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<line class="st4" x1="0" y1="17.92" x2="5" y2="17.92"/>
+		<polyline class="st5" points="11.28,17.92 17.92,17.92 82.08,17.92 91.86,17.92 		"/>
+		<line class="st4" x1="95" y1="17.92" x2="100" y2="17.92"/>
+	</g>
+</g>
+<g>
+	<g>
+		<line class="st4" x1="0" y1="82.08" x2="5" y2="82.08"/>
+		<polyline class="st5" points="11.28,82.08 17.92,82.08 82.08,82.08 91.86,82.08 		"/>
+		<line class="st4" x1="95" y1="82.08" x2="100" y2="82.08"/>
+	</g>
+</g>
+<g>
+	<g>
+		<line class="st4" x1="17.92" y1="100" x2="17.92" y2="95"/>
+		<polyline class="st5" points="17.92,88.72 17.92,82.08 17.92,17.92 17.92,8.14 		"/>
+		<line class="st4" x1="17.92" y1="5" x2="17.92" y2="0"/>
+	</g>
+</g>
+<g>
+	<g>
+		<line class="st4" x1="82.08" y1="100" x2="82.08" y2="95"/>
+		<polyline class="st5" points="82.08,88.72 82.08,82.08 82.08,17.92 82.08,8.14 		"/>
+		<line class="st4" x1="82.08" y1="5" x2="82.08" y2="0"/>
+	</g>
+</g>
+</svg>
