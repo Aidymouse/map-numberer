@@ -5,12 +5,14 @@
   import arrow from './assets/arrow.png'
   
   import PlusButtonFileInput from './components/PlusButtonFileInput.svelte';
+    import Settings from './components/Settings.svelte';
 
   let raw_canvas: HTMLCanvasElement;
   let main_canvas: HTMLCanvasElement;
 
-  let setting_autoincrement = true;
-
+  let settings = {
+    autoincrement: true
+  }
   let shift_held = false;
   
   let scale_factor = 1;
@@ -153,13 +155,18 @@
 
   }
 
-  // POINTER //
+  // EVENTS //
   function pointerdown(e) {
     if (!map_image.src) return;
     if (e.button == 0) {
 
+      
+      
       let mPos = getMousePos(e)
   
+      if (mPos.x < 0 || mPos.x > raw_canvas.width) return;
+      if (mPos.y < 0 || mPos.y > raw_canvas.height) return;
+
       map_numbers = map_numbers.slice(0, map_pointer+1)
   
       
@@ -172,7 +179,7 @@
         )
         
       map_pointer += 1
-      if (!shift_held && setting_autoincrement) floating_number.number = get_highest_number() + 1
+      if (!shift_held && settings.autoincrement) floating_number.number = get_highest_number() + 1
   
     
     } else if (e.button == 2) {
@@ -301,8 +308,9 @@
         }
 
         case "c": {
-          document.getElementById("help").classList.toggle("hidden");
-          document.getElementById("help-key").classList.add("down");
+          toggle_controls();
+          let key = document.getElementById("help-key")
+          if (key) key.classList.add("down");
           break
         }
       }
@@ -315,13 +323,14 @@
     switch (e.key) {
       case "Shift": {
         shift_held = false
-        if (setting_autoincrement) floating_number.number = get_highest_number() + 1
+        if (settings.autoincrement) floating_number.number = get_highest_number() + 1
         render_all()
         break
       }
 
       case "c": {
-        document.getElementById('help-key').classList.remove("down")
+        let key = document.getElementById('help-key') 
+        if (key) key.classList.remove("down")
         break
       }
     }
@@ -342,6 +351,10 @@
     settings.classList.contains("hidden") ? settings.classList.remove("hidden") : settings.classList.add("hidden")
   }
 
+  function toggle_controls() {
+    document.getElementById("help").classList.toggle("hidden");
+  }
+
 </script>
 
 <svelte:window on:resize={window_resize} on:load={window_resize} on:keydown={keydown} on:keyup={keyup}/>
@@ -350,25 +363,17 @@
 
   
   <aside id="settings-aside">
-    <button id="settings-button" on:click={toggle_settings}><img src={cog}></button>
-    <span id="settings" class="hidden">
-      Auto-Increment
-      <input type="checkbox" bind:checked={setting_autoincrement} />
-      <p class="tiny-text">Automatically increases number on cursor when placed</p>
-
-      <hr style="color: #bbbbbb">
-      <p class="tiny-text" style="margin-top: 0.5em">Map Numberer version 1.0</p>
-      <p class="tiny-text">By <a href="https://github.com/Aidymouse/map-numberer">Aidymouse</a></p>
-      
-      <p class="tiny-text" style="margin-top: 0.25em">Cog icon by <a href="https://www.flaticon.com/free-icons/cog" title="cog icons">Dave Gandy</a></p>
-      <p class="tiny-text">Arrow icon by <a href="https://www.flaticon.com/free-icons/play" title="next icons">Roundicons</a></p>
-
-      <p class="tiny-text" style="margin-top: 0.25em">See also: <a href="https://www.hexfriend.net">Hexfriend</a>, <a href="https://dagloopy.blogspot.com/">DaGloopy</a></p>
-    </span>
+    <button id="settings-button" on:click={toggle_settings} title="Settings"><img alt="settings" src={cog}></button>
+    
+    <Settings 
+      bind:settings
+      toggle_controls={toggle_controls}
+      />
+    
   </aside>
 
   <aside id="floating-aside" class="stowed">
-    <button id="aside-toggle" on:click={toggle_aside}> <img id="aside-toggle-img" src={arrow} class="right-facing"> </button>
+    <button id="aside-toggle" on:click={toggle_aside} title="Toggle controls"> <img id="aside-toggle-img" alt="Toggle controls" src={arrow} class="right-facing"> </button>
 
     <div id="controls">
       <p>Text</p>
@@ -396,7 +401,7 @@
         Load New Image
       </button>
       
-      <button class:light-button={map_image.src} disabled={map_image.src == "" ? true : false} on:click={export_map}>Export</button>
+      <button class="light-button" disabled={map_image.src == "" ? true : false} on:click={export_map}>Export</button>
     </div>
 
   </aside>
@@ -546,20 +551,6 @@ section {
   rotate: 180deg;
 }
 
-button {
-  background-color: #222222;
-  border: none;
-  color: #f2f2f2;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  font-weight: bold;
-  height: 2em;
-  border-radius: 3px;
-}
-
-button:hover {
-  background-color: #555555;
-}
 
 
 .light-button {
@@ -568,11 +559,6 @@ button:hover {
 
 .light-button:hover {
   background-color: #777777;
-}
-
-button:disabled, button[disabled] {
-  background-color: #444444;
-  color: #777777;
 }
 
 #controls-file-input {
@@ -666,24 +652,6 @@ input[type="color"]::-webkit-color-swatch-wrapper {
   width: 50%;
 }
 
-#settings {
-  display: block;
-  width: 15em;
-  margin-top: 0.5em;
-  background-color: #222222;
-  padding: 0.5em;
-  box-sizing: border-box;
-  color: #f2f2f2;
-}
 
-.tiny-text {
-  font-size: 9pt;
-  margin: 0px;
-  color: #bbbbbb;
-}
-
-a {
-  color: #8cc63f;
-}
 
 </style>

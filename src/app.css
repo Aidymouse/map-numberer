@@ -2,6 +2,17 @@
   background-color: #333333;
   background-image: url("./assets/bg.png");
   font-family: 'Segoe UI';
+
+  --bg: #333333;
+
+  --darkest: #222222;
+  --darkest_highlight: #555555;
+
+  --2nd_darkest: #555555;
+  --2nd_darkest_highlight: #777777;
+  
+  --3rd_darkest: #777777;
+  --3rd_darkest_highlight: #aaaaaa;
 }
 
 
@@ -23,4 +34,53 @@ body {
 
 main {
   height: 100%;
+}
+
+.tiny-text {
+  font-size: 9pt;
+  margin: 0px;
+  color: #bbbbbb;
+}
+
+a {
+  color: #8cc63f;
+}
+
+
+/* GLOBAL INPUT */
+button {
+  background-color: var(--darkest);
+  border: none;
+  color: #f2f2f2;
+  font-weight: bold;
+  height: 2em;
+  border-radius: 3px;
+}
+
+button:hover {
+  background-color: var(--darkest_highlight)
+}
+
+button:active {
+  background-color: var(--darkest);
+}
+
+button:disabled {
+
+}
+
+button.light-button {
+  background-color: var(--2nd_darkest)
+}
+
+button:hover.light-button {
+  background-color: var(--2nd_darkest_highlight)
+}
+
+button:active.light-button {
+  background-color: var(--2nd_darkest)
+}
+
+button:disabled.light-button {
+  color: var(--2nd_darkest_highlight)
 }
